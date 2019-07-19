@@ -2,6 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const moment = require('moment');
 
+const ProjectRouter = require('./api/projects/project-router.js');
+const ActionRouter = require('./api/actions/action-router.js');
+
 const server = express();
 
 server.get('/', (req, res) => {
@@ -11,6 +14,8 @@ server.get('/', (req, res) => {
 server.use(Requestlogger);
 server.use(express.json());
 server.use(helmet());
+server.use('/api/projects', ProjectRouter);
+server.use('/api/actions', ActionRouter);
 
 function Requestlogger(req, res, next) {
   console.log(
