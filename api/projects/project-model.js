@@ -11,9 +11,7 @@ module.exports = {
 
 function find() {
   return db('projects as p')
-    .join('actions as a', 'a.project_id', 'p.id')
     .select('p.id', 'p.name', 'p.description', 'p.isCompleted')
-    .distinct('p.id')
     .orderBy('p.id');
 }
 
