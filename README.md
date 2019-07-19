@@ -6,6 +6,10 @@ This Sprint explored Adding Data Persistence to Web APIs and you were taught the
 
 In your challenge for this Sprint, you will demonstrate proficiency by creating an API that persist data to SQLite3.
 
+## Author
+
+Sascha Majewsky
+
 ## Instructions
 
 **Read these instructions carefully. Understand exactly what is expected _before_ starting this Sprint Challenge.**
