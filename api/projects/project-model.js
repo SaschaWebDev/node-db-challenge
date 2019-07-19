@@ -12,7 +12,17 @@ module.exports = {
 function find() {
   return db('projects as p')
     .select('p.id', 'p.name', 'p.description', 'p.isCompleted')
-    .orderBy('p.id');
+    .orderBy('p.id')
+    .then(project =>
+      project.map(project =>
+        project
+          ? {
+              ...project,
+              isCompleted: Boolean(Number(project.isCompleted)),
+            }
+          : null,
+      ),
+    );
 }
 
 function findById(id) {
