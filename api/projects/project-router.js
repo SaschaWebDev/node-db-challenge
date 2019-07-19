@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Projects = require('./project-model.js');
+const dbActionsHelper = require('../actions/action-model.js');
 
 const router = express.Router();
 
@@ -23,7 +24,9 @@ router.get('/', async (req, res) => {
 // GET A PROJECT BY PROJECT ID
 router.get('/:id', middleware.validateProjectId, async (req, res) => {
   try {
-    res.status(200).json(req.project);
+    const { id } = req.params;
+    const actions = await dbActionsHelper.findByProjectId(id);
+    res.status(200).json({ ...req.project, actions: actions });
   } catch (error) {
     const { id } = req.params;
 

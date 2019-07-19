@@ -9,50 +9,13 @@ module.exports = {
   add,
 };
 
-async function helper(project_id) {
-  try {
-    console.log('CALLED WITH ID', project_id);
-    const whatever = await dbActionsHelper
-      .findByProjectId(project_id)
-      .then(action => {
-        console.log('ACTIONINSIDE ', action);
-        return action.length ? action : null;
-      });
-  } catch (error) {
-    console.log('ERROR', error);
-  }
-}
-
 function find() {
   return db('projects as p')
     .join('actions as a', 'a.project_id', 'p.id')
     .select('p.id', 'p.name', 'p.description', 'p.isCompleted')
     .distinct('p.id')
-    .orderBy('p.id')
-    .then(projects => {
-      console.log('PROJECTS', projects);
-      return projects.map(project => ({
-        ...project,
-        isCompleted: Boolean(Number(project.isCompleted)),
-        actions: helper(project.id),
-      }));
-    });
+    .orderBy('p.id');
 }
-
-/*        return (projects.map(project => ({
-         ...project,
-         isCompleted: Boolean(Number(project.isCompleted))
-         actions: helper(project.id)
-       }))})
-} */
-
-/*     .then(projects =>
-      projects.map(project => ({
-        ...project,
-        isCompleted: Boolean(Number(project.isCompleted)),
-        actions: helper(project.id),
-      })),
-    ); */
 
 function findById(id) {
   return db('projects')
@@ -60,7 +23,10 @@ function findById(id) {
     .first()
     .then(project =>
       project
-        ? { ...project, isCompleted: Boolean(Number(project.isCompleted)) }
+        ? {
+            ...project,
+            isCompleted: Boolean(Number(project.isCompleted)),
+          }
         : null,
     );
 }
