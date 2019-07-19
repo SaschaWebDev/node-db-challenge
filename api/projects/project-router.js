@@ -13,7 +13,9 @@ router.get('/', async (req, res) => {
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({
-      error: 'There was an error finding all projects. Sorry, that is on us!',
+      error:
+        'There was an error finding all projects. Sorry, that is on us!' +
+        error,
     });
   }
 });

@@ -82,4 +82,19 @@ router.delete('/:id', middleware.validateActionId, async (req, res) => {
   }
 });
 
+// GET ALL ACTIONS OF A PROJECT_ID
+router.get('/project/:id/', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const action = await Actions.findByProjectId(id);
+    res.status(200).json(action);
+  } catch (error) {
+    const { id } = req.params;
+
+    res.status(500).json({
+      error: `There was an error getting the actions of the project with the id: ${id}.`,
+    });
+  }
+});
+
 module.exports = router;

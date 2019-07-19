@@ -6,17 +6,30 @@ module.exports = {
   add,
   update,
   remove,
+  findByProjectId,
 };
 
 function find() {
-  return db('actions');
+  return db('actions as a')
+    .select('a.id', 'a.project_id', 'a.description', 'a.notes', 'a.isCompleted')
+    .orderBy('a.id')
+    .then(actions =>
+      actions.map(action => ({
+        ...action,
+        isCompleted: Boolean(Number(action.isCompleted)),
+      })),
+    );
 }
 
 function findById(id) {
   return db('actions')
     .where({ id: id })
     .first()
-    .then(action => (action ? action : null));
+    .then(action =>
+      action
+        ? { ...action, isCompleted: Boolean(Number(action.isCompleted)) }
+        : null,
+    );
 }
 
 function add(action) {
@@ -38,4 +51,17 @@ function remove(id) {
     : db('actions')
         .where('id', id)
         .del();
+}
+
+function findByProjectId(project_id) {
+  return db('actions as a')
+    .select('a.id', 'a.project_id', 'a.description', 'a.notes', 'a.isCompleted')
+    .where({ project_id: project_id })
+    .orderBy('a.id')
+    .then(actions =>
+      actions.map(action => ({
+        ...action,
+        isCompleted: Boolean(Number(action.isCompleted)),
+      })),
+    );
 }
