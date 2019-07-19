@@ -11,9 +11,13 @@ module.exports = {
 
 async function helper(project_id) {
   try {
-    const action = await dbActionsHelper.findByProjectId(project_id);
-    console.log('ACTION', action[1]);
-    return action[1];
+    console.log('CALLED WITH ID', project_id);
+    const whatever = await dbActionsHelper
+      .findByProjectId(project_id)
+      .then(action => {
+        console.log('ACTIONINSIDE ', action);
+        return action.length ? action : null;
+      });
   } catch (error) {
     console.log('ERROR', error);
   }
@@ -23,15 +27,32 @@ function find() {
   return db('projects as p')
     .join('actions as a', 'a.project_id', 'p.id')
     .select('p.id', 'p.name', 'p.description', 'p.isCompleted')
+    .distinct('p.id')
     .orderBy('p.id')
-    .then(projects =>
+    .then(projects => {
+      console.log('PROJECTS', projects);
+      return projects.map(project => ({
+        ...project,
+        isCompleted: Boolean(Number(project.isCompleted)),
+        actions: helper(project.id),
+      }));
+    });
+}
+
+/*        return (projects.map(project => ({
+         ...project,
+         isCompleted: Boolean(Number(project.isCompleted))
+         actions: helper(project.id)
+       }))})
+} */
+
+/*     .then(projects =>
       projects.map(project => ({
         ...project,
         isCompleted: Boolean(Number(project.isCompleted)),
         actions: helper(project.id),
       })),
-    );
-}
+    ); */
 
 function findById(id) {
   return db('projects')
