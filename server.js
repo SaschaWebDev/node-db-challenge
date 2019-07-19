@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const moment = require('moment');
 
 const server = express();
 
@@ -14,7 +15,7 @@ server.use(helmet());
 function Requestlogger(req, res, next) {
   console.log(
     `${req.method} to http://localhost/5000${req.path} at `,
-    Date.now(),
+    moment().format(),
   );
   next();
 }
